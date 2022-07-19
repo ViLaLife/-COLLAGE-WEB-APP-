@@ -1,37 +1,53 @@
+var SpeechRecognition = window.webkitSpeechRecognition;
+var Content;
+var recognition = new SpeechRecognition();
 
+function start()
+{
+    recognition.start();
+} 
+
+
+camera = document.getElementById("camera");
 Webcam.set({
-    width:350,
-    height:300,
-    image_format:'jpg',
-    jpg_quality:3000
+    width:500,
+    height:400,
+    image_format : 'jpeg',
+    jpeg_quality:90
 });
-var camera=document.getElementById("camera");
-Webcam.attach('#camera');
 
-function take_photo() {
+
+
+function speak(){
+
+    
+    var synth = window.speechSynthesis;
+    Webcam.attach(camera);
+
+    speak_data = "Taking your next Selfie in 5 seconds";
+    var utterThis = new SpeechSynthesisUtterance(speak_data);
+    synth.speak(utterThis);
+    setTimeout(function(){
+        img_id = "selfie1";
+        take_snapshot();
+        speak_data = "Taking Your Selfie In the Next 10 Seconds";
+        var utterThis = new SpeechSynthesisUtterance(speak_data);
+        synth.speak(utterThis);
+    },5000);
+
+}
+
+function take_snapshot()
+{
     Webcam.snap(function(data_uri){
-        var image="<img id='photo' src='"+data_uri+"'>";
-document.getElementById("result").innerHTML=image;
-
-    });
-}
-console.log("ml5 version: ", ml5.version);
-classifier=ml5.imageClassifier("https://teachablemachine.withgoogle.com/models/lcrBvXDhg/model.json", function modelLoaded(){
-    console.log("model loaded");
-})
-function check() {
-    img=document.getElementById("photo");
-    classifier.classify(img, got_result); 
-}
-
-
-function got_result(error, results) {
-if (error) {
-    console.error(error);
-}
-else {
-    console.log(results);
-    document.getElementById("emotion").innerHTML=results[0].label;
-    document.getElementById("accuracy").innerHTML=results[0].confidence;
-}
-}
+        if(img_id=="selfie1"){
+        document.getElementById("result1").innerHTML = '<img id="selfie1" src="'+data_uri+'"/>';
+        }
+        if(img_id=="selfie2"){
+            document.getElementById("result2").innerHTML = '<img id="selfie2" src="'+data_uri+'"/>';
+            }
+            if(img_id=="selfie3"){
+                document.getElementById("result3").innerHTML = '<img id="selfie3" src="'+data_uri+'"/>';
+                }
+            });
+        }
